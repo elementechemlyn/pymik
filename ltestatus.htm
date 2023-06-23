@@ -1,0 +1,15 @@
+<h3>LTE Status</h3>
+<ul><%
+    local cmd = io.popen("/usr/bin/python3 /home/emlyn/pymik/lteinfo.py -m", "r")        
+    if cmd then 
+        while true do
+            local line = cmd:read("*l")
+            if not line then
+                break
+            end
+            write(line)
+        end
+        cmd:close()
+    end
+%></ul>
+
