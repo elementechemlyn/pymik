@@ -1,10 +1,10 @@
 import ssl
 import argparse
+import re
+from datetime import datetime
 
 import librouteros
-
 import mktconfig
-
 
 class sms(object):
     def __init__(self):
@@ -35,6 +35,54 @@ class sms(object):
         except librouteros.exceptions.TrapError:
             return None
 
+    def load_inbox(self):
+        api = self.get_api()
+        try:
+            inbox = api.path('tool','sms','inbox')
+            return tuple(inbox)
+        except librouteros.exceptions.TrapError:
+            return None
+
+    def fix_up_date(self,date_str):
+        match = re.match('(^.+?[\+\-])([0-9]+)$',date_str)
+        offset = '0' + match.group(2) if len(match.group(2))==1 else match.group(2)
+        offset = offset + ':00'
+        return match.group(1) + offset
+
+    def sort_inbox(self,inbox:list):
+        inbox.sort(key=lambda x:x['timestamp'],reverse = True)
+        return inbox
+
+    def delete_message(self,msg):
+        pass
+
+    def save_message(self,msg):
+        pass
+
+    def get_inbox(self):
+        messages = self.load_inbox()
+        msg_by_ts = {}
+        inbox = []
+        for message in messages:
+            key = "%s_%s" % (message['timestamp'],message['phone'])
+            if key in msg_by_ts:
+                msg_by_ts[key].append(message)
+            else:
+                msg_by_ts[key] = [message,]
+        for ts in msg_by_ts.keys():
+            msgs = msg_by_ts[ts]
+            sender = ''
+            txt = ''
+            for msg in msgs:
+                if sender=='':
+                    sender = msg['phone']
+                elif not sender == msg['phone']:
+                    raise ValueError('%s sender does not match group %s' % (msg['phone'],sender))
+                txt = txt + msg['message']
+                iso_ts = self.fix_up_date(msg['timestamp'])
+                iso_dt = datetime.strptime(iso_ts,'%b/%d/%Y %H:%M:%S %Z %z')
+            inbox.append({'sender':sender,'messge':txt,'timestamp':iso_dt})
+        return self.sort_inbox(inbox)
 
 if __name__=="__main__":
     pass

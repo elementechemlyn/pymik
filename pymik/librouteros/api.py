@@ -2,15 +2,15 @@
 
 import typing
 from posixpath import join as pjoin
-from librouteros.exceptions import TrapError, MultiTrapError
-from librouteros.protocol import (
+from .exceptions import TrapError, MultiTrapError
+from .protocol import (
     compose_word,
     parse_word,
     ApiProtocol,
 )
-from librouteros import query
+from . import query
 
-from librouteros.types import (
+from .types import (
     ReplyDict,
     ResponseIter,
     Response,

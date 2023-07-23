@@ -1,10 +1,10 @@
 # -*- coding: UTF-8 -*-
 import typing
 from itertools import chain
-from librouteros.protocol import (
+from .protocol import (
     cast_to_api,
 )
-from librouteros.types import (
+from .types import (
     QueryGen,
     ResponseIter,
 )

@@ -4,17 +4,17 @@ import typing
 from socket import create_connection
 from collections import ChainMap
 
-from librouteros.exceptions import (
+from .exceptions import (
     ConnectionClosed,
     FatalError,
 )
-from librouteros.connections import SocketTransport
-from librouteros.protocol import ApiProtocol
-from librouteros.login import (
+from .connections import SocketTransport
+from .protocol import ApiProtocol
+from .login import (
     plain,
     token,
 )
-from librouteros.api import Api
+from .api import Api
 
 DEFAULTS = {
     'timeout': 10,

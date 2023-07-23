@@ -1,11 +1,11 @@
 import ssl
 import argparse
 
-import librouteros
+from . import librouteros
 
 import mktconfig
 
-import timedinput
+from . import timedinput
 
 stdout_template = """Current Operator :{currentoperator}
 Access Technology :{accesstechnology}

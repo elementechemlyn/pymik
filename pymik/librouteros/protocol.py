@@ -4,11 +4,11 @@ import typing
 from struct import pack, unpack
 # from logging import getLogger, NullHandler
 
-from librouteros.exceptions import (
+from .exceptions import (
     ProtocolError,
     FatalError,
 )
-from librouteros.connections import SocketTransport
+from .connections import SocketTransport
 
 #LOGGER = getLogger('librouteros')
 #LOGGER.addHandler(NullHandler())
