@@ -98,11 +98,36 @@ class ltewatch(object):
             self.connect()
         return self.api
 
-    def get_lte_info(self):
+    def get_lte_id(self,name="lte1"):
         api = self.get_api()
+        name_key = librouteros.query.Key('name')
+        ltes = list(api.path('/interface').select('.id').where(name_key==name))
+        if len(ltes)==0:
+            raise RuntimeError('LTE name not found')
+        if len(ltes)>1:
+            raise RuntimeError('Multiple LTEs found')
+        return ltes[0]['.id']
+    
+    def disable_lte(self,name="lte1"):
+        api = self.get_api()
+        lte_id = self.get_lte_id(name)
+        lte = api.path('interface','lte')
+        g = lte('disable',**{'.id':lte_id})
+        return tuple(g)
+    
+    def enable_lte(self,name="lte1"):
+        api = self.get_api()
+        lte_id = self.get_lte_id(name)
+        lte = api.path('interface','lte')
+        g = lte('enable',**{'.id':lte_id})
+        return tuple(g)
+    
+    def get_lte_info(self,name="lte1"):
+        api = self.get_api()
+        lte_id = self.get_lte_id(name)
         try:
             lte = api.path('interface','lte')
-            g = lte('info',**{'.id':'*1','once':''})
+            g = lte('info',**{'.id':lte_id,'once':''})
             return tuple(g)
         except librouteros.exceptions.TrapError:
             return None
