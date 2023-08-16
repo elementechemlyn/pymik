@@ -1,10 +1,9 @@
 import ssl
 import argparse
-
-from . import librouteros
+import time
 
 import mktconfig
-
+from . import librouteros
 from . import timedinput
 
 stdout_template = """Current Operator :{currentoperator}
@@ -121,7 +120,12 @@ class ltewatch(object):
         lte = api.path('interface','lte')
         g = lte('enable',**{'.id':lte_id})
         return tuple(g)
-    
+
+    def bounce_lte(self,delay=10):
+        self.disable_lte()
+        time.sleep(delay)
+        self.enable_lte()
+
     def get_lte_info(self,name="lte1"):
         api = self.get_api()
         lte_id = self.get_lte_id(name)
