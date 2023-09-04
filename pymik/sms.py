@@ -3,7 +3,7 @@ import argparse
 import re
 from datetime import datetime
 
-import librouteros
+from . import librouteros
 import mktconfig
 
 class sms(object):
